@@ -1,0 +1,141 @@
+arr.push() -> add at last
+.pop() -> reomve from last
+.shift() -> remove from begin
+.unsift() -> add at begin
+---------------------
+if var keyword is not used in a function then it becomes global automatically
+if var keyword is used within the function then it stays as local
+if var keyword is used outside of all the functions then it becomes global
+if the same named global variable is used in local then local variable overrides global
+-------------------
+2 == '2' => true (it automatically tries to bring it to common data type)
+2 === '2' => false (strict comparison) 
+
+11 != '11' => false (it automatically tries to bring it to common data type)
+11 !== '11' => false (strict comparison) 
+---------------
+var varz = 
+{
+ "key1" : "value1",
+"key2" : "value2",
+};
+ to access varz.key1 or varz["key1"] tfor both get and set
+to remove a key => delete varz.key1
+
+var json_obj = {"a":"b","c":["d","e"]}
+var json_obj_copy = JSON.parse(JSON.stringify(json_obj))
+-----------------
+var arr = []
+var i = 0;
+while(i < 5)
+{
+   arr.push(i);
+}
+
+var arr2 = []
+for(var i=0;i<5;i++)
+{
+    arr.push(i);
+}
+
+var arr3 = [[1,2],[3,4]]
+for(var i=0;i<arr3.length;i++)
+{
+    for(var j=0;j<arr3[i].length;j++)
+    {
+        console.log(arr3[i][j])
+    }
+}
+----------------------
+parseInt("56") => str->int
+parseInt("11001",2) => binaryStr -> Int
+var num = 15;
+var n = num.toString();
+------------------------
+const ABC = 10; // abc cannot be modified...Read Only
+ABC = 11; //will throw error
+
+var abc = 10; // abc can be modified
+var abc = 12 //Ok
+abc = 13 // Ok
+
+let abc = 10; // abc can be modified
+let abc = 12 //redeclaration not allowed
+abc = 13 // Ok
+
+function checkScopeLet()
+{
+    let i = "outside";
+    if(1 == 1)
+    {
+         let i = "inside";
+         console.log(i); // prints inside
+    }
+    console.log(i); // prints outside
+}
+
+function checkScopeVar()
+{
+    var i = "outside";
+    if(1 == 1)
+    {
+         var i = "inside";
+         console.log(i); // prints inside
+    }
+    console.log(i); // prints inside
+}
+----------------------------------
+// To declare constant objects
+const MATH_CONSTANT = {
+    PI:3.14
+}; // this can still be modified
+
+Object.freeze(MATH_CONSTANT) 
+// Now MATH_CONSTANT cannot be modified
+----------------------------------
+const bicycle() = {
+    gear:2,
+    setGear: function(newGear){
+        this.gear = newGear;
+    }
+};
+
+bicycle.setGear(3);
+console.log(bicycle.gear);// => result = 3
+--------------------------------
+class spaceShuttle
+{
+    contructor(targetPlanet)
+    {
+        this.targetPlanet = targetPlanet;
+    }
+}
+
+var zeus = new spaceShuttle('Jupiter');
+console.log(zeus.targetPlanet)
+----------------------------------
+<Getters and Setters>
+_ => private variable
+function makeClass()
+{
+    class Thermostat
+    {
+        constructor(temp)
+        {
+              this._temp = 5/9 * (temp - 32); 
+        }
+        get temperature()
+        {
+             return this._temp;
+        }
+        set temperature(updatedTemp)
+        {
+             this._temp = updatedTemp;
+        }
+    }
+    return Thermostat;
+}
+
+const Thermostat = makeClass();
+const thermos = new Thermostat(76);
+-------------------------------------------

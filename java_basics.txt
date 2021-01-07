@@ -1,0 +1,1255 @@
+How java works?
+Source file->compiler->byte code->JVM
+--------------------------------
+-Default value of variables is zero in java
+--------------------------------
+class name same as file name
+
+psvm(string args[]) -- string args[] is used to be able to accept command line arguments
+ex - java -jar myApp.jar update notify
+System.out.println(args[0]); //Which will print 'update'
+System.out.println(args[1]); //Which will print 'notify'
+
+psvm breakdown?
+-public
+This is the access modifier of the main method.
+It has to be public so that java runtime can execute this method. 
+Remember that if you make any method non-public then it’s not allowed to be executed by any program, 
+there are some access restrictions applied. So it means that the main method has to be public.
+-static (go below for further explaination)
+To call any method in java we require object but there is no object for main as main is the starting point.
+That’s why the main method has to be static so that JVM can load the class into memory and 
+call the main method. If the main method won’t be static, 
+JVM would not be able to call it because there is no object of the class is present.
+-void
+It is the return type
+-main
+This is the name of java main method. 
+It’s fixed and when we start a java program, it looks for the main method
+
+To run java code : 
+javac Firstcode.java <compile javafile>
+java Firstcode <jvm classname>
+-----------------------
+int i = 5;
+int j = i++;
+sysout(j) => 5 and not 6 as i++ is post increment
+
+int i = 5;
+int j = ++i;
+sysout(j) => 6 and as ++i is pre increment
+-----------------------
+//Var Args <variable arguemnts>
+public class FirstProgram
+{
+    public static void main(String args[])
+    {
+        Display obj = new Display();
+        obj.show(4,5,6); => prints 4,5,6 // it looks out for var args
+        obj.show(7);=> prints 7 from exact// it looks out for exact args
+    }
+}
+
+class Display()
+{
+    public void show(int ... args)
+    {
+        for(int i : a)
+        {
+            sysout(i);
+        }
+    }
+
+    public void show(int a)
+    {
+        sysout(i + " from exact");
+    }
+}
+-----------------------
+class -> blueprint
+object -> physical things formed using this object
+
+How classes and objects interacts in java?
+- In java instance of an object gets created in Heap memory(HM) and 
+reference of this instance is mapped to stack memory(SM)
+- java divides all variable into 2 types primitive and reference
+primitive varaible are one of those belonging to one of eight data type(byte,short,int,long,char,boolean,float,double)
+reference variable holds the Hashcode of the address of an instance of an object from heap memory
+- everytime we write new A() it will create a new instance of an object in Heap memory and 
+create a reference to that object in stack memory
+- if from stack memory an instance of an object is not being pointed at then that instance becomes
+eligible for garbage collection
+
+class A
+{
+    int x;
+    public void show()
+    {
+        sysout("Hello");
+    }
+}
+
+psvm(string args[])
+{
+    int i = 5;
+    A obj = new A();
+}
+
+-A obj -> obj is refrence to an instance of an object
+-new A() -> new assigns memory based on constructor and A() executes constructor
+
+<-----StackMemory------>| <---------HeapMemory----------->
+i : 5                   |      (101)obj:x/show()
+obj : #101              |  
+
+Now suppose we add further lines : 
+
+psvm(string args[])
+{
+    int i = 5;
+    A obj = new A();
+    obj = new A();
+}
+
+<-----StackMemory------>| <---------HeapMemory----------->
+i : 5                   |      (101)obj:x/show() <eligible for garbage collection as nothing from stack memory is pointing towards it>
+obj : #103<new address> |      (103)obj:x/show()
+
+Now suppose we add further lines : 
+
+psvm(string args[])
+{
+    int i = 5;
+    A obj = new A();
+    obj = new A();
+    obj = null;
+}
+
+<-----StackMemory------>| <---------HeapMemory----------->
+i : 5                   |      (101)obj:x/show() <eligible for garbage collection as nothing from stack memory is pointing towards it>
+obj : null<null address>|      (103)obj:x/show() <eligible for garbage collection as nothing from stack memory is pointing towards it>
+
+-----------------------
+Constructor  :
+-method with name same as class name
+-it will be used to allocate memory and assign default values
+
+class A()
+{
+    int i;
+    int j;
+    public A()
+    {
+        i = 2;
+        j = 5;
+        sysout("default constructor");
+    }
+
+    public A(int a)
+    {
+        j = a;
+        sysout("overloaded constructor");
+    }
+}
+
+psvm(String args[])
+{
+    A obj = new A(); //prints => default constructor
+    A obj = new A(34); //prints => overloaded constructor
+}
+-----------------------
+call by value or call by reference?
+-In java everything is call by value
+
+public class HelloWorld
+{
+    public static void main(String []args){
+        Demo obj = new Demo();
+        int var = 5;
+        obj.A(var);
+        System.out.println(var); // var was still 5
+    }
+}
+
+class Demo
+{
+    public void A(int var)
+    {
+        var = 10;
+    }
+}
+
+To achieve call by reference we need to send object 
+and then change the value...internally it is still call by value but 
+it appears to be doing call by reference
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A objA = new A();
+        System.out.println(objA.var);//set from constructor in class A
+        B objB = new B();
+        objB.setText(objA);//set from class B
+        System.out.println(objA.var);
+    }
+}
+
+class A
+{
+    String var;
+    
+    A()
+    {
+       var = "set from constructor in class A"; 
+    }
+    
+    public void setVar(String abc)
+    {
+        var = abc;
+    }
+    
+    public String getVar()
+    {
+        return var;
+    }
+}
+
+class B
+{
+    public void setText(A obj)
+    {
+        obj.setVar("set from class B");
+    }
+}
+----------------------
+Package name
+It should be unique...it is ensured by using reverse of domian name as domain name is unique
+ex :
+domain - google.com
+package - com.google
+
+ex -  import com.google.controller.* to import all classes from controller
+-----------------------
+Access modifiers/Access specifiers
+
+for class - only avaialble final,abstract and public (private and prtected cannot be used with class)
+for methods - public,private and protected
+public methods - accessible within different class
+private methods - accebile only within same class
+
+class A
+{
+    String var;
+    
+    private void setVar(String abc)
+    {
+        var = abc;
+    }
+}
+
+class B
+{
+    public void setText(A obj)
+    {
+        obj.setVar("set from class B"); // this is error as private methods cannot be accessed from other class
+    }
+}
+
+protected variables - only subsequent methods can only access it
+public class A
+{
+    protected int i;
+}
+
+class B extends A
+{
+    public void show()
+    {
+        sysout(i);
+    }
+}
+----------------------
+what is static?
+- for using a method we need to instantiate an object from a class...when we use static 
+we don't need to instantiate an object and we can directly use the method
+- non static variable cannot be used inside static method
+- static variable or class variable has same value for all instantiation of an object from a class
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        classNameA.show(); // we didn't instantiate object and directly called class.method
+        classNameA.i = 5; // we didn't instantiate object and directly called class.variable
+
+        B obj1 = new B();
+        B obj2 = new B();
+        obj1.a = 4;
+        
+        System.out.println(obj1.a);//4 as static variable is shared among instance
+        System.out.println(obj2.a);//4 as static variable is shared among instance
+    }
+}
+
+class classNameA
+{
+    static int i = 10;
+    static void show()
+    {
+        System.out.println("printing from static");
+        System.out.println(i); // used cos i is static variable
+    }
+}
+
+class B
+{
+    static int a = 2;
+    int b = 5;
+}
+-----------------------
+Program to count number of objects?
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        B obj1 = new B();
+        B obj2 = new B();
+        B obj3 = new B();
+        
+        System.out.println(B.count);
+    }
+}
+
+
+class B
+{
+    static int count = 0; //using static variable as it will be shared among all objects
+    B()
+    {
+        count++;
+    }
+}
+-----------------------
+this keyword?
+- this.variable is used to differentiate between instance variable and local variable when
+using getters and setters...look for example below in encapsulation
+-----------------------
+what is encapsulation?
+-we should declare variables as private and use getters and setters
+i.e incapsulation states that we should use methods in order to change value of variable
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        B obj = new B();
+        obj.setVar(5);
+        System.out.println(obj.getVar());
+        //System.out.println(obj.x);//this throws error as private variable cannot be accessed
+    }
+}
+
+class B
+{
+    private int x; // here x is instance variable
+    
+    void setVar(int x) // here x is a local variable
+    {
+        this.x = x; // this.x is used to differentiate between instance variable and local variable
+    }
+    
+    int getVar()
+    {
+        return this.x;
+    }
+}
+-----------------------
+what is inheritance?
+- all the objects of class B is avaialble in class A
+- private variables are only available in that class and cannot be inherited
+- class A extends B => features from B came to A and is called single level inheritance
+- class C extends A and class A extends B => features from B came to A and features from A came to C
+this is called multi level inheritance
+- class C extends A,B => this is not supported in Java and this concept is called multiple inheritance
+- when we create object of subclass then automatically constructor of parent class is also called
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj2 = new A();
+        obj2.printVar();
+    }
+}
+
+class B
+{
+    private int var;
+    int i = 10;
+}
+
+class A extends B
+{
+    void printVar()
+    {
+        //System.out.println(var); // this will give error as private cannot be inherited
+        System.out.println(i); // prints => 10
+    }
+}
+
+- when we create object of subclass then automatically constructor of parent class is also called
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj2 = new A();//prints => "constructor from B" then "constructor from A"
+    }
+}
+
+class B
+{
+    B()
+    {
+        System.out.println("constructor from B");
+    }
+}
+
+class A extends B
+{
+    A()
+    {
+        System.out.println("constructor from A");
+    }
+}
+-----------------------
+what is polymorphism?
+-overloading => 2 methods with same name but different parameters
+-overriding => 2 methods with same name and parameters but method of that class is called discarding
+the method from parent class
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj = new A();
+        obj.show();
+    }
+}
+
+class B
+{
+    void show()
+    {
+        System.out.println("show from B");
+    }
+}
+
+class A extends B
+{
+    void show()
+    {
+        System.out.println("show from A");
+    }
+}
+
+// above program prints => show from A as methods with same name and parameters is discarded 
+of parent class ie show() from class A overrided show() from parent class B
+-----------------------
+what is super keyword?
+super(); => this is used to call contructor of parent class
+super.variable or super.method() => this is used to call variable or method of 
+parent class except private members
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj = new A();
+        obj.show();
+    }
+}
+
+class B
+{
+    int i = 10;
+    private int j = 100;
+    void show()
+    {
+        System.out.println("show from B");
+    }
+}
+
+class A extends B
+{
+    int i = 5;
+    void show()
+    {
+        super.show();// prints show from B
+        System.out.println("show from A"); // prints show from A
+        
+        System.out.println(i); // prints 5
+        System.out.println(super.i); // prints 10
+        //System.out.println(super.j); // throws error as private members cannot be accessed with super
+    }
+}
+-----------------------
+what is final keyword?
+- final keyword is used to assign a value once and then never change it
+
+class A
+{
+    final int i;
+    i = 10;
+    //i = i + 1; => throws error as once a value is assigned it cannot modify it
+}
+
+- final keyword is used in methods to stop overriding
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj = new A();
+        obj.show();
+    }
+}
+
+class B
+{
+    final void show()
+    {
+        System.out.println("show from B");
+    }
+}
+
+class A extends B
+{
+    void show() // => this will throw error as show() is final in class B and hence cannot be overrided
+    {
+        System.out.println("show from A"); // prints
+    }
+}
+
+- final keyword is used in class to stop inheritance
+
+final class B
+{
+    void show()
+    {
+        System.out.println("show from B");
+    }
+}
+
+class A extends B // => this throws error as class B is final and hence cannot be inherited
+{
+    
+}
+
+-----------------------
+Anonymous object?
+- it used when you want to only use methods only once
+- advantage of using Anonymous object is that it doesn't consume stack memory and only consumes heap memory
+- another scenario where it is useful is when we created an object and called a method on it but then
+we didn't do anything with it then for rest of the program then this wont we eligible for 
+garbage collection as reference object of that class will be pointing to heap...on the contarary 
+anonymous object after calling its method will be eligible for garbage collection as 
+there is no reference object for it
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        new B().show(); // new B() is called anonymous object
+    }
+}
+
+class B
+{
+    void show()
+    {
+        System.out.println("Hi");
+    }
+}
+-----------------------
+what is abstraction?
+- A method which is only declared and not not defined or implemented is called abstract method and 
+a class which has atleast 1 abstract method is called abstract class
+- You cannot create object of abstract class...i.e new A() is not allowed
+- You can create a reference of an abstract class but to this reference object of that class 
+is to be assigned where all the abstract methods were defined...i.e A obj = new C();
+- wherever the abstract method is defined it is called overriding of abstract method
+- if a class extends an abstract class and fails to define all the abstract method then it also becomes
+an abstract class
+- if a class extends an abstract class and defines all the abstract method then it becomes normal class
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        A obj = new C(); // reference of abstract class = object of abstract defination class
+        obj.dance(); // print dancing
+        obj.cook();// print cooking
+        obj.run();// print running
+    }
+}
+
+abstract class A
+{
+    void greet()
+    {
+        System.out.println("Namaste");
+    }
+    
+    abstract void dance();
+    abstract void cook();
+    abstract void run();
+}
+
+abstract class B extends A
+{
+    void dance()
+    {
+        System.out.println("Dancing");
+    }
+}
+
+class C extends B
+{
+    void cook()
+    {
+        System.out.println("Cooking");
+    }
+    
+    void run()
+    {
+        System.out.println("Running");
+    }
+}
+
+- Important case is when same reference can be used for different class
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        Greetings obj1 = new A(); // reference of Greetings class = object of class A
+        Greetings obj2 = new B(); // reference of Greetings class = object of class B
+        obj1.greet();
+        obj2.greet();
+    }
+}
+
+abstract class Greetings
+{
+    abstract void greet();
+}
+
+class A extends Greetings
+{
+    void greet()
+    {
+        System.out.println("Namaste");
+    }
+}
+
+class B extends Greetings
+{
+    void greet()
+    {
+        System.out.println("koinichiwa");
+    }
+}
+-----------------------
+what is Interface?
+- java does not support multiple inheritance but this is solved via Interface
+- Interface borrows the concept of abstract methods and abstract class
+- Declaration of method in interface automatically has prefix of public abstract eventough we don't
+write it exclusively
+- Declaration of variable in interface automatically has prefix of public static final eventough we don't
+write it exclusively
+- wherever the above abstract method withiin the interface is defined it is called 
+overriding of abstract method
+- when objects from different class wants to use same method then we create an interface
+
+In below example we have 2 class A and B which has greet method...now we want to enable this greet for
+object of A and object of B...by traditional thinking we would be doing something as below
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        // so to enable greet from object of A and object of B we used 2 different class C and D
+        A obj1 = new A();
+        C obj3 = new C();
+        obj3.enableGreeting(obj1);
+        
+        B obj2 = new B();
+        D obj4 = new D();
+        obj4.enableGreeting(obj2);
+    }
+}
+
+class A
+{
+    void greet()
+    {
+        System.out.println("Namaste");
+    }
+}
+
+class B
+{
+    void greet()
+    {
+        System.out.println("Koinichiwa");
+    }
+}
+
+class C
+{
+    void enableGreeting(A obj)
+    {
+        obj.greet();
+    }
+}
+
+class D
+{
+    void enableGreeting(B obj)
+    {
+        obj.greet();
+    }
+}
+
+- what if above task can be done by a single interface class
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        D obj1 = new A();
+        D obj2 = new B();
+        D obj5 = new E();
+        
+        C obj3 = new C();
+        
+        obj3.enableGreeting(obj1);
+        obj3.enableGreeting(obj2);
+        obj3.enableGreeting(obj5);
+    }
+}
+
+interface D
+{
+    void greet();
+}
+
+class A implements D
+{
+    public void greet()
+    {
+        System.out.println("Namaste");
+    }
+}
+
+class B implements D
+{
+    public void greet()
+    {
+        System.out.println("Koinichiwa");
+    }
+}
+
+class E implements D
+{
+    public void greet()
+    {
+        System.out.println("Hallo");
+    }
+}
+
+class C
+{
+    public void enableGreeting(D obj)
+    {
+        obj.greet();
+    }
+}
+
+- so working rule is ... same method name in different class ... we will use interface to proceed
+- when we want to implement multiple inheritance we will use interface for that as well
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        B obj2 = new B();
+        obj2.greet();
+        obj2.greetAct();
+    }
+}
+
+interface D
+{
+    void greet();
+}
+
+interface G
+{
+    void greetAct();
+}
+
+class B implements D,G
+{
+    public void greet()
+    {
+        System.out.println("Koinichiwa");
+    }
+    
+    public void greetAct()
+    {
+        System.out.println("Bow Down");
+    }
+}
+---------------------
+- what  is Wrapper class?
+int i;
+float f;
+
+above i and f are not object but primitive variable
+
+now if we want to create object of primitive variable we can use Wrapper class
+This process is called wrapping(variable -> object)
+Integer iobj = new Integer(5);
+
+similar to Integer Wrapper class we have Double,Byte etc.
+
+to unwrap(object -> variable) we simply use .intValue();
+
+int j = iobj.intValue();
+
+---------------------
+String -> int => Integer.toString(<int variable>) or <int variable>.toString();
+int -> String => Integer.parseInt(<int variable>)
+----------------------
+- How to take input?
+1st method
+Scannner sc = new Scanner(System.in);
+sc.nextLine();
+
+2nd method
+InputStreamReader is = new InputStreamReader(System.in);
+BufferedReader br = new BufferedReader(is);
+int n = Integer.parseInt(br.readLine());
+----------------------
+- How to split string?
+String str = "a,b,c";
+String names[] = str.split(",");
+
+for(String val : names)
+{
+    sysout(val);
+}
+----------------------
+- why is string immutable?
+
+String str1 = "abc"; // stack address : 101
+String str2 = "abc"; // stack address : 101
+
+in stack memory both str1 and str2 will have same address of heap
+
+now suppose we do
+str1 = "cdf" // stack address : 103
+
+so cdf starts poinitng to new object from heap and thats why String is immutable
+-----------------------
+- what is Serialization?
+Serialization is a mechanism of converting the state of an object into a byte stream. 
+Deserialization is the reverse process where the byte stream is used to recreate the 
+actual Java object in memory. This mechanism is used to save the object
+example : saving final score after game is closed
+
+import java.io.*; 
+
+class Demo implements java.io.Serializable 
+{ 
+	public int a; 
+	public String b; 
+
+	// Default constructor 
+	public Demo(int a, String b) 
+	{ 
+		this.a = a; 
+		this.b = b; 
+	} 
+
+} 
+
+class Test 
+{ 
+	public static void main(String[] args) 
+	{ 
+		Demo object = new Demo(1, "geeksforgeeks"); 
+		String filename = "file.ser"; 
+		
+		// Serialization 
+		try
+		{ 
+			//Saving of object in a file 
+			FileOutputStream file = new FileOutputStream(filename); 
+			ObjectOutputStream out = new ObjectOutputStream(file); 
+			
+			// Method for serialization of object 
+			out.writeObject(object); 
+			
+			out.close(); 
+			file.close(); 
+			
+			System.out.println("Object has been serialized"); 
+
+		} 
+		
+		catch(IOException ex) 
+		{ 
+			System.out.println("IOException is caught"); 
+		} 
+
+
+		Demo object1 = null; 
+
+		// Deserialization 
+		try
+		{ 
+			// Reading the object from a file 
+			FileInputStream file = new FileInputStream(filename); 
+			ObjectInputStream in = new ObjectInputStream(file); 
+			
+			// Method for deserialization of object 
+			object1 = (Demo)in.readObject(); 
+			
+			in.close(); 
+			file.close(); 
+			
+			System.out.println("Object has been deserialized "); 
+			System.out.println("a = " + object1.a); 
+			System.out.println("b = " + object1.b); 
+		} 
+		
+		catch(IOException ex) 
+		{ 
+			System.out.println("IOException is caught"); 
+		} 
+		
+		catch(ClassNotFoundException ex) 
+		{ 
+			System.out.println("ClassNotFoundException is caught"); 
+		} 
+
+	} 
+} 
+-----------------------
+- what is jdbc?
+concept of connecting java application with database
+
+following is the 7 step process to connect
+1) import the package 
+2) load and register the driver
+3) Establish the connection
+4) Create the query Statement
+5) Execute the query Statement
+6) Process the result returned by query execution
+7) close the connection
+
+- Type of driver depends upon type of rdvms(ex: mysql,postgre etc.)
+
+1) (java.sql.*)
+2) (to register: com.mysql.jdbc.driver) (jar required : mysql-connector) (to load : class.forName(com.mysql.jdbc.Driver))
+3) Connection con = DriverManager getConnection("URL","UN","PWD");
+4) Statement st = con.createStatement();
+5) ResultSet rs = st.executeQuery("select * from table1")
+6) example table1 : contains 2 columns id:int and name:String
+while(rs.next()) // rs.next moves cursor to next row and as well returns true or false if next row is available or not
+{
+    sysout(rs.getInt("id") + "   " + rs.getString("username")); 
+}
+7) 
+st.close()
+con.close()
+-----------------------
+- what is DAO?
+DAO is data access object...so an object is created to access database and fetch result
+similarly we do it for the adding data to database as well
+
+public class HelloWorld
+{
+    public static void main(String []args)
+    {
+        StudentDAO dao = new StudentDAO();
+        Student s1 = dao.getStudent(12); // get a student based on roll number
+        System.out.println(s1.sname);
+    }
+}
+
+class StudentDAO
+{
+    public Student getStudent(int rollno)
+    {
+        Student s = new Student();
+        s.rollno = rollno;
+
+        // loading jdbc driver
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/jubin","root","0");
+        Statement st = con.createStatement();
+        String query = "select sname from student where rollno="+rollno;
+        ResultSet rs = st.executeQuery(query);
+        rs.next();
+        String name = rs.getString("sname");
+        //
+
+        s.sname = name;
+        return s;
+    }
+}
+
+class Student
+{
+    int rollno;
+    String sname;
+}
+-----------------------
+what is collection?
+- group of individual object represented as a single unit known as collection
+
+what is framework?
+- A framework is a set of classes and interfaces which provide a ready made  architecture
+ex - collection framework
+
+- collection framework is a java API which provides architecture to store 
+and manipulate group of objects
+- while working with collection we use Wrapper class (see above) and coversion of variable->object 
+and object->variable is automatically taken care of by collection framework
+-------------------------
+
+collection is an interface which contains a number of abstract methods declared
+
+collection
+-list(stores as indexed collection[0,1,2....],order preserved,duplicates are allowed)
+-set(not indexed collection[implemented as hashtable],order not preserved,unique elements only)
+
+Note : list is also an interface
+similarly set is also an interface
+
+-List(interface)
+    -ArrayList (dynamic array) (non-threadsafe)
+    -LinkedList (Doubly linked list)
+    -Vector (dynamic array) (threadsafe) (legacy i.e implemented at 1.0 and java keeps 
+                                            backward compatibility altough work similar to ArrayList)
+        -stack (lifo)
+
+-Set(interface)
+    -HashSet (order not preserved with duplicates not allowed)
+        -LinkedHashSet (order preserved with duplicates not allowed) 
+    -SortedSet(interface) (this is not available)
+        -Treeset (sorted element with duplicates not allowed) (implemented as self balancing BST)
+
+
+Iterable(interface) => collection extends Iterable so 
+            everything within collection can be traversed using for-each
+
+Iterator(interface) => collection can also use Iterator but it allows moving only in forward direction
+--------------------------
+Note : collection and its heirarchy stores single elements while map stores key-value pairs
+and map is seperate heirarchy similar to collection
+
+map : key-value pair storage...both key and value can be object of Integer,Float,Student,Book
+Duplicate keys are not allowed and order of key is not preserved
+
+-Map(interface)
+    -HashMap (Duplicate keys are not allowed and order of key is not preserved)
+        -LinkedHashMap (Duplicate keys are not allowed and order of key is preserved)
+    -SortedMap (Interface)
+        -LinkedHashMap (keywise sorted with Duplicate keys not allowed)
+--------------------------
+example code : 
+import java.util.*;
+
+public class Main
+{
+	public static void main(String []args)
+    {
+        /*
+        creating collection we have 2 ways : 
+        1) Type Safe - same type of elements(objects) are added to collection
+        2) UnType Safe - different type of elements(objects) can be added to collection
+        */
+        
+        //Type Safe collection
+        ArrayList<String> names = new ArrayList<>();
+        names.add("abc");
+        names.add("def");
+        names.add("ghi");
+        names.add("jkl");
+        System.out.println(names);
+        System.out.println(names.get(0));
+        names.remove("abc");
+        names.remove(0);
+        System.out.println(names.size());
+        System.out.println(names.contains("ghi"));
+        names.add(1,"mno");// this will add the element at index and element already present will be shifted to next index
+        names.set(0,"pqr");// this will replace the element at index
+        System.out.println(names);
+        
+        System.out.println("-for-");
+        
+        // traversing forward
+        for(String str : names)
+        {
+            System.out.println(str);
+            StringBuffer br = new StringBuffer(str);
+            System.out.println(br.reverse());
+        }
+        
+        System.out.println("-forward-");
+        
+        // traversing forward
+        Iterator<String> itr = names.iterator();
+        
+        while(itr.hasNext())
+        {
+            String elem = itr.next();
+            System.out.println(elem);
+        }
+        
+        System.out.println("-backward-");
+        
+        // traversing backward
+        ListIterator<String> litr = names.listIterator(names.size());
+        
+        while(litr.hasPrevious())
+        {
+            String elem = litr.previous();
+            System.out.println(elem);
+        }
+        
+        System.out.println("-forEach-");
+        
+        //forEach method
+        names.forEach(e->{
+            System.out.println(e);
+        });
+        
+        System.out.println("--------------");
+        
+        //UnType Safe collection
+        LinkedList list = new LinkedList();
+        list.add("abc");
+        list.add(2);
+        System.out.println(list);
+        System.out.println(list.get(0));
+        
+        System.out.println("--------------");
+        
+        HashSet<Integer> hs = new HashSet<>();
+        hs.add(5);
+        hs.add(5);
+        hs.add(1);
+        if(hs.contains(5))
+        {
+            hs.add(2);
+        }
+        System.out.println(hs);
+        // note : order not preserved
+        System.out.println("--------------");
+        
+        TreeSet<Integer> ts = new TreeSet<>();
+        ts.add(5);
+        ts.add(3);
+        ts.add(3);
+        if(ts.contains(5))
+        {
+            ts.add(2);
+        }
+        
+        System.out.println(ts);
+        // note : sorted order
+        System.out.println("--------------");
+        
+        HashMap<String,Integer> hm = new HashMap<>();
+        hm.put("fb",1);
+        hm.put("db",2);
+        
+        System.out.println(hm);
+        
+        hm.forEach((e1,e2)->{
+            System.out.println(e1 + "->" + e2);
+        });
+        
+        System.out.println(hm.get("db"));
+        
+        if(hm.containsKey("db"))
+        {
+            hm.put("python",5);
+        }
+        
+        System.out.println(hm);
+        System.out.println("--------------");
+        
+        Stack<Integer> st = new Stack<>();
+        st.push(5);
+        st.push(8);
+        st.push(10);
+        
+        if(st.contains(8))
+        {
+            st.push(15);
+        }
+        
+        while(st.isEmpty() == false)
+        {
+            System.out.println(st.peek());
+            st.pop();
+        }
+        
+        System.out.println("--------------");
+        
+        // 2 classes that implements Queue interface are LinkedList and Priority Queue
+        
+        Queue<Integer> q = new LinkedList<>();
+        q.add(5);
+        q.add(8);
+        q.add(10);
+        
+        if(q.contains(4))
+        {
+            q.add(1);
+        }
+        
+        while(q.isEmpty() == false)
+        {
+            System.out.println(q.peek());
+            q.remove();
+        }
+        
+        System.out.println("--------------");
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(); //min Queue
+        pq.add(16);
+        pq.add(4);
+        pq.add(12);
+        
+        if(pq.contains(4))
+        {
+            pq.add(1);
+        }
+        
+        while(pq.isEmpty() == false)
+        {
+            System.out.println(pq.peek());
+            pq.remove();
+        }
+        
+        
+    }
+}

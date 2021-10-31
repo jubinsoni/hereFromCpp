@@ -1,14 +1,9 @@
 # hereFromCpp
 
-This is a repo where concize material is present which helps anyone to transition to a new language from c++
+This is a repo which contains basic declaration and syntax used in different languages
 
 c++ -> core Java (core java + collections framework)
 <br>
 c++ -> JavaScript (pure javascript)
 <br>
-
-In future :
-
-c++ -> React
-<br>
-Spring Framework
+lego blocks that are used to solve difficult ds/algo problems

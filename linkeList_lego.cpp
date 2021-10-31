@@ -176,6 +176,22 @@ void removeLoop(Node** headptr)
     slow->next = NULL;
 }
 
+void reverseList(Node** headptr)
+{
+    Node* head = *headptr;
+    Node* backward = NULL;
+    Node* curr = *headptr;
+    Node* forward = *headptr;
+
+    while(backward != NULL)
+    {
+        forward = curr->next;
+        curr->next = backward;
+        backward = curr;
+        curr = forward;
+    }
+}
+
 int main()
 {
     vector<int> arr;
@@ -203,6 +219,11 @@ int main()
     cout << "detectLoop after creating loop => " << detectLoop(&headptr) << endl;
     removeLoop(&headptr);
     cout << "detectLoop after removing loop => " << detectLoop(&headptr) << endl;
+    cout << "LinkedList after removing loop => ";
+    printList(headptr);
+
+    reverseList(&headptr);
+    cout << "LinkedList after reversal => ";
     printList(headptr);
 
     return 0;

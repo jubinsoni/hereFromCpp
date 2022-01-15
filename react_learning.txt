@@ -1,0 +1,181 @@
+nvm install 10.15.3
+nvm use 10.15.3
+npm init
+npm install create-react-app
+npx create-react-app n5-kanji-app
+npm install --global yarn
+yarn start
+yarn add react-router-dom
+yarn add howler
+$$$
+src is where our application lives
+public is where dependency of project lives ... ie html and js code generated from react
+
+in public/index.html ... <div id="root"></div> is the entrypoint of our react app
+
+class in react :
+--class gives access to render, states
+
+
+import React, {Component} from 'react';
+class App extends Component{
+    constructor(){
+        super();
+
+        this.state = {
+            field1: 'rand1',
+            field2: 'rand2'
+        }
+   }
+  render() {
+    return (
+      <any html that we want to render>
+    );
+  }
+}
+
+button in react : 
+<button onClick={() => this.setState({field1: Math.floor(Math.random() * 10)})}>change State</button>
+
+creating headers from array
+always give id field also
+this.state = {
+      kanjis: [
+        {
+          name: 'name1',
+          id: 'asc1'
+        },
+        {
+          name: 'name2',
+          id: 'asc2'
+        },
+        {
+          name: 'name3',
+          id: 'asc3'
+        }
+      ]
+    }
+
+note : we have to declare id and pass it in h1
+{
+    this.state.kanjis.map(kanji => (
+    <h1 key = {kanji.id}> {kanji.name} </h1>
+    ))
+}
+
+using fetch in react : 
+
+
+this.state = {
+    kanjis: [] 
+}
+
+componentDidMount(){
+    fetch('https://jsonplaceholder.typicode.com/users')
+    .then(response => response.json())
+    //.then(users => console.log(users))
+    .then(users => this.setState({kanjis : users}))
+  }
+
+creating Components:
+create a new folder components inside src and card-list inside it create card-list.component.jsx
+
+in app.js:
+import { CardList } from './components/card-list.component';
+render() {
+    return (
+      <div className="App">
+        {/* <p>{console.log(this.state.kanjis)}</p> */}
+        <CardList kanjiList={this.state.kanjis} /> 
+      </div>
+    );
+  };
+
+in card-list.component.jsx
+
+import React from "react";
+export const CardList = props => (
+    // <div>sdsd {console.log(props.name)}</div>
+    <div className='card-list'>
+        {props.kanjiList.map(kanji => (
+            <Card key={kanji.id} kanjiName={kanji} />
+        ))}
+    </div>
+)
+
+basicall state is sent as props down the DOM Tree
+
+========
+In Javascript:
+Curly brackets: after an arrow function they represent a code block, which consists of zero or more grouped statements within the curly brackets.
+const jsBrackets = x => {
+return x > 3 ? true : false}
+If the function can be written on one line (as the example above can, it can be shortened to exclude both the curly brackets and the return word, as below.
+const jsBrackets = x => x > 3 ? true : false
+Parentheses: are used instead of curly brackets after an arrow function to return an object. For example, they are used in map, filter, and reduce functions.
+const numbers = [1,2,3,4]
+numbers.map((number => number * 2)
+Using JSX in React:
+Curly brackets: are a special syntax to let the JSX parser know that it needs to interpret the contents between them as javascript instead of text.
+const items =this.state.toDoList.map((item) => <li>{item}</li> ).
+Since {item} is in curly brackets JSX interprets that as to find the variable item back in javascript land and to insert it within the <li></li>s.
+Parentheses: are used to wrap multiline codes of Javascript after the return statement in order for your code to compile.
+render () {
+return ( <li> {item}</li>,
+<SomeComponent /> )
+}
+If you only have one line of code, you don’t need the parentheses.
+render () {
+return <li> {item}</li>
+}
+=============
+
+whenever setState is called and properties change react calls the render method again
+
+==============
+Use the correct Array method to remove the last item of the fruits array.
+const fruits = ["Banana", "Orange", "Apple"];
+fruits.pop();
+
+Use the correct Array method to add "Kiwi" to the fruits array.
+const fruits = ["Banana", "Orange", "Apple"];
+fruits.push("Kiwi")
+
+Create a Date object and alert the current date and time.
+const d = new Date();
+alert(d);
+d.getFullYear()
+d.getMonth()
+setFullYear(2020)
+
+<p id="demo"></p>
+document.getElementById("demo").innerHTML
+document.getElementsByTagName("p")[0].innerHTML
+
+<p class="test"></p>
+document.getElementsByClassName("test")[0].innerHTML
+
+Use HTML DOM to change the value of the image's src attribute.
+<img id="image" src="smiley.gif">
+document.getElementById("image").src= "pic_mountain.jpg";
+
+Use HTML DOM to change the value of the input field.
+<input type="text" id="myText" value="Hello">
+document.getElementById("myText").value= "Have a nice day!";
+
+Change the text color of the <p> element to "red".
+<p id="demo"></p>
+document.getElementById("demo").style.color= "red";
+
+Use the eventListener to assign an onclick event to the <button> element.
+<button id="demo">Click me1</button>
+document.getElementById("demo").addEventListener("click", myFunction);
+$$$$$$$$$$$$$$$$$$$$$$$
+
+nvm install 10.15.3
+nvm use 10.15.3
+npm init
+npm install create-react-app
+npx create-react-app crwn-clothing
+cd crwn-clothing
+code .

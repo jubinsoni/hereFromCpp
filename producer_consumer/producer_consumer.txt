@@ -1,0 +1,37 @@
+what is consumer-producer problem?
+-> producer and consumers shares a common fixed sized buffer
+producer generates the data and places that onto buffer
+consumer consumes the data from the buffer once piece at a time
+
+problem is to make sure that producer won't try to add data to buffer if it's full 
+and consumer won't try to remove the data if it's empty
+
+ex - chef cooks the food and serve on table while waiters try to take the prepared food from table asap
+chef - producer
+table - critical section 
+waiters - consumers
+
+race condition : when thread tries to read data while some other thread tries to write the same data
+
+solution:
+Mutual Exclusion : one thread goes to critical section by locking it so that other thread can't access it (Not ideal distributed systems)
+Message Passing : Message sent through queues by producer and 1 consumer access message in queues on FIFO basis
+
+what is sqs?
+-> a hosted queue for inter communication between applications or microservice which helps us decouple our application
+
+what is dead letter queue?
+-> it is an additional queue when there is error in consumer while consuming message
+
+sender(producer) ----> channel -----> receiver(consumer1)
+                        |
+                        |
+                        |
+                    dlq channel ----> dlq receiver(consumer2)
+
+flow :
+1) read message from queue and process
+2) if an exception occurs then try again to receive a message n  number of times
+3) if number of attempts exceeds, sqs moves it to dead letter queue (another sqs queue)
+4) now message from this dead letter queue can be read by another consumer2 and perform an action e.g send email notification
+5) remove message from dead letter queue

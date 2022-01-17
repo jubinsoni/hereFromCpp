@@ -1,3 +1,6 @@
+# cd ~/Desktop/coding_ds_algo/hereFromCpp/producer_consumer
+# python3 -m sqs.sqs-consumer-email
+
 import smtplib
 import time
 import json
@@ -5,14 +8,9 @@ import boto3
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from .config import QUEUE_URL, ACCESS_KEY, SECRET_KEY
+from .config import QUEUE_URL, ACCESS_KEY, SECRET_KEY, gmail_user, gmail_pwd, REGION_NAME
 
-sqs = boto3.client('sqs', region_name='ap-south-1', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-
-
-gmail_user = "jubinkumarsoni@gmail.com"
-gmail_pwd = ""
-
+sqs = boto3.client('sqs', region_name=REGION_NAME, aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
 
 def send_mail(to, subject, text, html, **kwargs):
 

@@ -1,13 +1,3 @@
-arr.push() -> add at last
-.pop() -> reomve from last
-.shift() -> remove from begin
-.unsift() -> add at begin
----------------------
-if var keyword is not used in a function then it becomes global automatically
-if var keyword is used within the function then it stays as local
-if var keyword is used outside of all the functions then it becomes global
-if the same named global variable is used in local then local variable overrides global
--------------------
 2 == '2' => true (it automatically tries to bring it to common data type)
 2 === '2' => false (strict comparison) 
 
@@ -60,30 +50,50 @@ var abc = 12 //Ok
 abc = 13 // Ok
 
 let abc = 10; // abc can be modified
-let abc = 12 //redeclaration not allowed
+let abc = 12 //throws error
 abc = 13 // Ok
 
-function checkScopeLet()
-{
-    let i = "outside";
-    if(1 == 1)
-    {
-         let i = "inside";
-         console.log(i); // prints inside
-    }
-    console.log(i); // prints outside
-}
+let vs var
 
-function checkScopeVar()
-{
-    var i = "outside";
-    if(1 == 1)
-    {
-         var i = "inside";
-         console.log(i); // prints inside
-    }
-    console.log(i); // prints inside
+1) let doesn't allow to redeclare Variables
+let name = "abcde"
+let name = "zzz" // => this will throw error
+
+var abc = "def"
+var abc = "ghi" // => this won't throw error
+
+2) let Doesn't Allow Hoisting
+console.log(a);
+let a; // => Error raised Uncaught ReferenceError: a is not defined
+
+console.log(a);
+var a; // => undefined (not an error)
+
+3) let is block-scoped while var is function scoped
+let a = true
+
+if(a){
+    let b = 'within if'
+    console.log(b) // => prints within if
 }
+//console.log(b) // => throws error
+
+if(a){
+    var c = "inside if"
+    console.log(c) // => prints inside if
+}
+console.log(c) // => prints inside if here as well without error
+----------------------------------
+backtick 
+1) to use placeholders we have to declare strings via backtick
+let a = "nikhil"
+let b = "sonam"
+let sentence = `${a} is a freind of ${b}`
+console.log(sentence) // => nikhil is a freind of sonam
+
+2) backtick can be used to declare a string containing both single quotes and double quotes
+let strz = `"this is shyam's table"`
+console.log(strz) // => "this is shyam's table"
 ----------------------------------
 // To declare constant objects
 const MATH_CONSTANT = {
